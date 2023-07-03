@@ -5,7 +5,7 @@ namespace tuCarbureApi.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class Controller : ControllerBase
+public class StationController : ControllerBase
 {
 
     [HttpGet]
