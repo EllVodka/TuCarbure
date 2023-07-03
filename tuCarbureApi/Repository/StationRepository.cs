@@ -8,5 +8,9 @@ namespace tuCarbureApi.Repository
         public List<Station> Get() {
             return new List<Station>();
         }
+
+        public Station GetById(int id) {
+            return new Station();
+        }
     }
 }
