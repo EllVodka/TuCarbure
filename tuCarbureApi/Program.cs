@@ -1,4 +1,10 @@
+using tuCarbureApi.Models;
+using tuCarbureApi.Services;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.Configure<MongoDBSettings>(builder.Configuration.GetSection("MongoDB"));
+builder.Services.AddSingleton<MongoDBService>();
 
 
 
