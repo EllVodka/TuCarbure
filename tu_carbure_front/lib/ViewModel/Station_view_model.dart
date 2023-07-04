@@ -37,14 +37,26 @@ class StationViewModel {
     final carburants = [
       Carburant(
         nom: 'Essence',
-        nomEuropeen: 'SP95',
+        nomEuropeen: 'E10',
         prix: prixEssence,
         dateMaj: DateTime.now(),
       ),
       Carburant(
         nom: 'Diesel',
-        nomEuropeen: 'Gazole',
+        nomEuropeen: 'B7',
         prix: prixDiesel,
+        dateMaj: DateTime.now(),
+      ),
+      Carburant(
+        nom: 'SuperEthanol',
+        nomEuropeen: 'E85',
+        prix: 0.5,
+        dateMaj: DateTime.now(),
+      ),
+      Carburant(
+        nom: 'SP98',
+        nomEuropeen: 'E10',
+        prix: prixEssence,
         dateMaj: DateTime.now(),
       ),
     ];

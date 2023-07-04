@@ -74,8 +74,7 @@ class _StationListViewState extends State<StationListView> {
             margin: const EdgeInsets.only(top: 20.0),
             child: Image.asset(
               'assets/tu_carbure_logo.png',
-              height: 80.0,
-              width: 80.0,
+              width: 150,
             ),
           ),
           Row(
