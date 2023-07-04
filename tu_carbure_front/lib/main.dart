@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
       ),
       home: const StationListView(),
       routes: {
-          StationDetailView.routeName: (c) => StationDetailView(),
+          StationDetailView.routeName: (context) => StationDetailView(),
       },
     );
   }

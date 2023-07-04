@@ -15,7 +15,8 @@ class StationListView extends StatefulWidget {
 class _StationListViewState extends State<StationListView> {
   final StationViewModel _viewmodel = StationViewModel();
   List<Station> stations = [];
-  Station stationFavorite = Station(
+  List<Station> stationNotFavorite = [];
+   Station stationFavorite = Station(
     id: '0',
     marque: '',
     isFavorite: false,
@@ -40,29 +41,30 @@ class _StationListViewState extends State<StationListView> {
     List<Station> fetchedStation =_viewmodel.fetchStation();
     setState(() {
       stations = fetchedStation;
+      stationFavorite = stations.firstWhere((element) => element.isFavorite, orElse: () => Station(
+          id: '0',
+          marque: '',
+          isFavorite: false,
+          voie: '',
+          numVoie: 0,
+          ville: '',
+          codePostal: 0,
+          latitude: 0,
+          longitude: 0,
+          carburant: [
+            Carburant(
+                nom: '',
+                nomEuropeen: '',
+                prix: 0,
+                dateMaj: DateTime.now())
+          ]));
+      stationNotFavorite = stations.where((station) => !station.isFavorite).toList();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    stationFavorite = stations.firstWhere((element) => element.isFavorite,
-        orElse: () => Station(
-                id: '0',
-                marque: '',
-                isFavorite: false,
-                voie: '',
-                numVoie: 0,
-                ville: '',
-                codePostal: 0,
-                latitude: 0,
-                longitude: 0,
-                carburant: [
-                  Carburant(
-                      nom: '',
-                      nomEuropeen: '',
-                      prix: 0,
-                      dateMaj: DateTime.now())
-                ]));
+
 
     return Material(
       color: const Color.fromRGBO(6, 7, 14, 1),
@@ -103,9 +105,9 @@ class _StationListViewState extends State<StationListView> {
                 crossAxisCount: 2,
                 childAspectRatio: 1.4,
               ),
-              itemCount: stations.length,
+              itemCount: stationNotFavorite.length,
               itemBuilder: (BuildContext context, int index) {
-                final station = stations[index];
+                final station = stationNotFavorite[index];
                 return StationCard(station, 7, 26, 79, 1);
               },
             ),

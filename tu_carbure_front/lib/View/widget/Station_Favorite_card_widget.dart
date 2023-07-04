@@ -14,7 +14,7 @@ class StationFavoriteCard extends StatelessWidget {
 
   void selectStation(BuildContext context) {
     Navigator.of(context).pushNamed(StationDetailView.routeName,
-        arguments: {"idStation": station.id, "name": station.marque});
+        arguments: {"id": station.id, "name": station.marque});
   }
 
   @override
