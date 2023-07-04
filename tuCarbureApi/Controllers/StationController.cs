@@ -20,6 +20,12 @@ public class StationController : ControllerBase
        return await _mongoDBService.GetAsync();
     }
 
+    [HttpGet]
+    [Route("/{id}")]
+    public async Task<ActionResult<List<Station>>> Get(string id){
+        return await _mongoDBService.GetByIdAsync(id);
+    }
+
     [HttpPost]
     public async Task<ActionResult<Station>> Post([FromBody] Station station){
         await _mongoDBService.CreateAsync(station);
