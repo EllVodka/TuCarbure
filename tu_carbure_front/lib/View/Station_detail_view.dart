@@ -42,7 +42,7 @@ class StationDetailView extends StatelessWidget {
       ),
       body: Column(
         children: [
-          StationMap(),
+          StationMap(station),
           StationListCarburant(station),
         ],
       ),
