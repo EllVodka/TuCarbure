@@ -7,9 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:http/io_client.dart' as http_io;
 
 class StationViewModel {
-  List<Station> stations = [];
-
-  static const String apiUrl = 'https://192.168.51.41:7094/Station';
+  static const String apiBaseUrl = 'https://192.168.51.41:7094';
 
   Future<List<Station>> fetchStation() async {
     http.Client client = http_io.IOClient(
@@ -17,15 +15,31 @@ class StationViewModel {
         ..badCertificateCallback = (cert, host, port) => true,
     );
 
-    final response = await client.get(Uri.parse(apiUrl));
+    final response = await client.get(Uri.parse('$apiBaseUrl/Station'));
 
     if (response.statusCode == 200) {
-      final jsonData = json.decode(response.body);
-      stations = List<Station>.from(
-          jsonData.map((data) => Station.fromJson(data)));
+      var stations = stationsFromJson(response.body);
+      stations.map((station) => station.isFavorite = false);
       return stations;
     } else {
-      throw Exception('Failed to fetch InfoCarbu from API');
+      throw Exception('Failed to fetch fetchStation from API');
+    }
+  }
+
+  Future<Station> getStationById(String id) async{
+    http.Client client = http_io.IOClient(
+      HttpClient()
+        ..badCertificateCallback = (cert, host, port) => true,
+    );
+
+    final response = await client.get(Uri.parse('$apiBaseUrl/$id'));
+
+    if (response.statusCode == 200) {
+      var station = stationFromJson(response.body);
+      station.isFavorite = false;
+      return station;
+    } else {
+      throw Exception('Failed to fetch GetStationById from API');
     }
   }
 }
