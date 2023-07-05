@@ -10,11 +10,14 @@ class StationMap extends StatelessWidget {
   const StationMap(this.station);
 
   static const pageTitle = 'Localisation';
-  static const googleMapsUrl =
-      'https://www.google.com/maps/search/?api=1&query=St+Jean+Douai';
+  static const googleMapBaseUrl = 'https://www.google.com/maps/search/?api=1&query=';
+
+  String _generateGoogleMapUrl(){
+    return'${googleMapBaseUrl}${station.numVoie as String}+${station.voie.replaceAll(' ', '+')}+${station.codePostal}+${station.ville}';
+  }
 
   void _openGoogleMaps(BuildContext context) async {
-    final url = 'https://www.google.com/maps/search/?api=1&query=St+Jean+Douai';
+    final url = _generateGoogleMapUrl();
     if (await canLaunch(url)) {
       await launch(url);
     } else {
@@ -37,7 +40,7 @@ class StationMap extends StatelessWidget {
   void _openGoogleMapsIntent(BuildContext context) {
     final intent = AndroidIntent(
       action: 'action_view',
-      data: Uri.parse(googleMapsUrl).toString(),
+      data: Uri.parse(_generateGoogleMapUrl()).toString(),
       package: 'com.google.android.apps.maps',
     );
     intent.launch();
@@ -76,7 +79,7 @@ class StationMap extends StatelessWidget {
                           Marker(
                             width: 50.0,
                             height: 50.0,
-                            point: LatLng(50.369465744099635, 3.0860044668324575),
+                            point: LatLng(station.latitude, station.longitude),
                             builder: (ctx) => Container(
                               child: Icon(
                                 Icons.location_pin,

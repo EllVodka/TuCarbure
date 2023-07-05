@@ -93,6 +93,9 @@ class _StationListViewState extends State<StationListView> {
                 onPressed: () {
                   // Logique du bouton
                 },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color.fromRGBO(7, 26, 79, 1)
+                ),
                 child: const Text('Filtre'),
               ),
             ],
