@@ -6,15 +6,33 @@ import 'package:tu_carbure_front/Model/Carburant.dart';
 
 Station stationFromJson(String str) => Station.fromJson(json.decode(str));
 
-List<Station> stationsFromJson(String str) => List<Station>.from(json.decode(str).map((x) => Station.fromJson(x)));
+List<Station> stationsFromJson(String str) =>
+    List<Station>.from(json.decode(str).map((x) => Station.fromJson(x)));
 
 String stationToJson(Station data) => json.encode(data.toJson());
+
+Station emptyStation(){
+  return Station(
+    id: '0',
+    marque: '',
+    isFavorite: false,
+    voie: '',
+    numVoie: 0,
+    ville: '',
+    codePostal: 0,
+    latitude: 0,
+    longitude: 0,
+    carburant: [
+      Carburant(nom: '', nomEuropeen: '', prix: 0, dateMaj: DateTime.now())
+    ],
+  );
+}
 
 class Station {
   String id;
   String marque;
   List<Carburant> carburant;
-  bool isFavorite;
+  bool? isFavorite;
   String voie;
   int numVoie;
   String ville;
@@ -36,10 +54,10 @@ class Station {
   });
 
   factory Station.fromJson(Map<String, dynamic> json) => Station(
-      id: json["_id"],
+      id: json["stationId"],
       marque: json["marque"],
       carburant: List<Carburant>.from(
-          json["carburant"].map((x) => Carburant.fromJson(x))),
+          json["carburants"].map((x) => Carburant.fromJson(x))),
       voie: json["voie"],
       numVoie: json["numVoie"],
       ville: json["ville"],
@@ -49,9 +67,9 @@ class Station {
       isFavorite: false);
 
   Map<String, dynamic> toJson() => {
-        "_id": id,
+        "stationId": id,
         "marque": marque,
-        "carburant": List<dynamic>.from(carburant.map((x) => x.toJson())),
+        "carburants": List<dynamic>.from(carburant.map((x) => x.toJson())),
         "voie": voie,
         "numVoie": numVoie,
         "ville": ville,
