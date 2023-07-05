@@ -25,8 +25,8 @@ public class MongoDBService {
         return await _stations.Find(new BsonDocument()).ToListAsync();
     }
 
-    public async Task<List<Station>> GetByIdAsync(string id ){
-        return await _stations.Find(station => station.StationId == id).ToListAsync();
+    public async Task<Station> GetByIdAsync(string id ){
+        return await _stations.Find(station => station.StationId == id).FirstOrDefaultAsync();
     }
 
     public async Task<Station> PatchAsync(Station station) {

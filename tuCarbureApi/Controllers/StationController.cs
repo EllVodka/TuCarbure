@@ -22,7 +22,7 @@ public class StationController : ControllerBase
 
     [HttpGet]
     [Route("/{id}")]
-    public async Task<ActionResult<List<Station>>> Get(string id){
+    public async Task<ActionResult<Station>> Get(string id){
         return await _mongoDBService.GetByIdAsync(id);
     }
 
