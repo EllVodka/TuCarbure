@@ -24,7 +24,7 @@ class StationCard extends StatelessWidget {
       onTap: () => selectStation(context),
       child: Container(
         height: 40,
-        margin: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
+        margin: const EdgeInsets.symmetric(horizontal: 7.0, vertical: 7.0),
         padding: const EdgeInsets.all(10.0),
         decoration: ShapeDecoration(
           color: Color.fromRGBO(backgroundColorR, backgroundColorG,
@@ -67,7 +67,7 @@ class StationCard extends StatelessWidget {
                 const Icon(Icons.route,
                     color: Color.fromRGBO(244, 244, 246, 1), size: 22),
                 Text(
-                  '10 km - 20 min',
+                  '10 km\n20 min',
                   style: const TextStyle(
                     fontSize: 13.0,
                     color: Color.fromRGBO(244, 244, 246, 1),

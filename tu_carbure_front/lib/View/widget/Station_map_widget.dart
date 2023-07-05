@@ -13,7 +13,7 @@ class StationMap extends StatelessWidget {
   static const googleMapBaseUrl = 'https://www.google.com/maps/search/?api=1&query=';
 
   String _generateGoogleMapUrl(){
-    return'${googleMapBaseUrl}${station.numVoie as String}+${station.voie.replaceAll(' ', '+')}+${station.codePostal}+${station.ville}';
+    return'${googleMapBaseUrl}${station.numVoie}+${station.voie.replaceAll(' ', '+')}+${station.codePostal}+${station.ville}';
   }
 
   void _openGoogleMaps(BuildContext context) async {
@@ -111,7 +111,11 @@ class StationMap extends StatelessWidget {
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () {
-                      // Ouvrir map button action
+                      if (Theme.of(context).platform == TargetPlatform.android) {
+                        _openGoogleMapsIntent(context);
+                      } else {
+                        _openGoogleMaps(context);
+                      }
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Color.fromRGBO(115, 23, 23, 1),
