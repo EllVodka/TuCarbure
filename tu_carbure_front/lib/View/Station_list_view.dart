@@ -16,20 +16,7 @@ class _StationListViewState extends State<StationListView> {
   final StationViewModel _viewmodel = StationViewModel();
   List<Station> stations = [];
   List<Station> stationNotFavorite = [];
-   Station stationFavorite = Station(
-    id: '0',
-    marque: '',
-    isFavorite: false,
-    voie: '',
-    numVoie: 0,
-    ville: '',
-    codePostal: 0,
-    latitude: 0,
-    longitude: 0,
-    carburant: [
-      Carburant(nom: '', nomEuropeen: '', prix: 0, dateMaj: DateTime.now())
-    ],
-  );
+   Station stationFavorite = emptyStation();
 
   @override
   void initState() {
@@ -41,24 +28,8 @@ class _StationListViewState extends State<StationListView> {
     List<Station> fetchedStation = await _viewmodel.fetchStation();
     setState(() {
       stations = fetchedStation;
-      stationFavorite = stations.firstWhere((element) => element.isFavorite, orElse: () => Station(
-          id: '0',
-          marque: '',
-          isFavorite: false,
-          voie: '',
-          numVoie: 0,
-          ville: '',
-          codePostal: 0,
-          latitude: 0,
-          longitude: 0,
-          carburant: [
-            Carburant(
-                nom: '',
-                nomEuropeen: '',
-                prix: 0,
-                dateMaj: DateTime.now())
-          ]));
-      stationNotFavorite = stations.where((station) => !station.isFavorite).toList();
+      stationFavorite = stations.firstWhere((element) => element.isFavorite!, orElse: () => emptyStation());
+      stationNotFavorite = stations.where((station) => !station.isFavorite!).toList();
     });
   }
 

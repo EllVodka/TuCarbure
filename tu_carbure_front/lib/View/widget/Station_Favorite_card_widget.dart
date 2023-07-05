@@ -14,13 +14,13 @@ class StationFavoriteCard extends StatelessWidget {
 
   void selectStation(BuildContext context) {
     Navigator.of(context).pushNamed(StationDetailView.routeName,
-        arguments: {"id": station.id, "name": station.marque});
+        arguments: {"id": station.id});
   }
 
   @override
   Widget build(BuildContext context) {
     return Visibility(
-        visible: station.isFavorite,
+        visible: station.isFavorite!,
         child: InkWell(
           onTap: () => selectStation(context),
           child: Container(
