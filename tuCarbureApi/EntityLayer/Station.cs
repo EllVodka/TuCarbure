@@ -27,11 +27,8 @@ public partial class Station
     [BsonElement("codePostal")]
     public int CodePostal {get; set;}
 
-    [BsonElement("latitude")]
-    public double? Latitude {get; set;}
-
-    [BsonElement("longitude")]
-    public double? Longitude {get; set;}
+    [BsonElement("coordonnees")]
+    public Coordonnee? Coordonnees {get; set;}
 
     [BsonElement("carburants")]
     public List<Carburant>? Carburants {get; set;}
