@@ -37,8 +37,8 @@ class _StationListViewState extends State<StationListView> {
     _fetchStation();
   }
 
-  void _fetchStation() {
-    List<Station> fetchedStation =_viewmodel.fetchStation();
+  void _fetchStation() async {
+    List<Station> fetchedStation = await _viewmodel.fetchStation();
     setState(() {
       stations = fetchedStation;
       stationFavorite = stations.firstWhere((element) => element.isFavorite, orElse: () => Station(

@@ -6,6 +6,8 @@ import 'package:tu_carbure_front/Model/Carburant.dart';
 
 Station stationFromJson(String str) => Station.fromJson(json.decode(str));
 
+List<Station> stationsFromJson(String str) => List<Station>.from(json.decode(str).map((x) => Station.fromJson(x)));
+
 String stationToJson(Station data) => json.encode(data.toJson());
 
 class Station {

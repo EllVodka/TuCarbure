@@ -15,7 +15,7 @@ class StationDetailView extends StatelessWidget {
     final stationId = routeArgs['id'];
     final stationMarque = routeArgs['name'];
     final Station station =
-        _viewModel.fetchStation().where((element) => element.id == stationId).first;
+        _viewModel.stations.where((element) => element.id == stationId).first;
 
     return Scaffold(
       backgroundColor: Color.fromRGBO(6, 7, 14, 1),
