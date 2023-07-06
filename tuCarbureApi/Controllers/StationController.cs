@@ -47,8 +47,8 @@ public class StationController : ControllerBase
     }
 
     [HttpPatch]
-    public async Task<ActionResult<Station>> Patch(string id, string nomCarburant, int prix){
-        await _mongoDBService.PatchAsync(id, nomCarburant, prix);
-        return;
+    public Task Patch([FromBody] CarburantToUpdate carburantToUpdate){
+
+        return _mongoDBService.PatchAsync(carburantToUpdate);
     }
 }

@@ -1,7 +1,7 @@
 using tuCarbureApi.Models;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
-using System.Linq;
+using MongoDB.Driver.Linq;
 using MongoDB.Bson;
 using tuCarbureApi.EntityLayer;
 using MongoDB.Driver.GeoJsonObjectModel;
@@ -46,9 +46,35 @@ public class MongoDBService {
         return sortedStations;
         
     }
-    public async Task PatchAsync(string id, string nomCarburant, decimal prix) {
-        var stationFromDB = await _stations.Find(station => station.StationId == id).SingleAsync();
-        return;
+
+    public async Task PatchAsync([FromBody] CarburantToUpdate carburantToUpdate)  {
+        {
+            var filter = Builders<Station>.Filter.And(
+                Builders<Station>.Filter.Eq(s => s.StationId, carburantToUpdate.StationId),
+                Builders<Station>.Filter.ElemMatch(s => s.Carburants, c => c.Nom == carburantToUpdate.NomCarburant)
+            );
+
+            var update = Builders<Station>.Update
+                .Set("Carburants.$.Prix", carburantToUpdate.PrixCarburant)
+                .Set("Carburants.$.DateMaj", DateTime.Now);
+
+            var options = new FindOneAndUpdateOptions<Station>
+            {
+                ReturnDocument = ReturnDocument.After
+            };
+
+            var updatedStation = await _stations.FindOneAndUpdateAsync(filter, update, options);
+
+            if (updatedStation != null)
+            {
+                Carburant updatedCarburant = updatedStation.Carburants
+                    .Find(c => c.Nom == carburantToUpdate.NomCarburant);
+
+                return;
+            }
+
+            return;
+        }
     }
 
  
