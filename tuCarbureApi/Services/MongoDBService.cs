@@ -46,7 +46,6 @@ public class MongoDBService {
         return sortedStations;
         
     }
-
     public async Task PatchAsync(string id, string nomCarburant, decimal prix) {
         var stationFromDB = await _stations.Find(station => station.StationId == id).SingleAsync();
         return;
