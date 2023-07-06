@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tu_carbure_front/Model/Carburant.dart';
 import 'package:tu_carbure_front/Model/Station.dart';
+import 'package:tu_carbure_front/View/screens/Station_detail_view.dart';
 import 'package:tu_carbure_front/View/widget/Station_Favorite_card_widget.dart';
 import 'package:tu_carbure_front/View/widget/Station_card_widget.dart';
+import 'package:tu_carbure_front/ViewModel/Station_favorite_view_model.dart';
 import 'package:tu_carbure_front/ViewModel/Station_view_model.dart';
 
 class StationListView extends StatefulWidget {
@@ -16,7 +19,7 @@ class _StationListViewState extends State<StationListView> {
   final StationViewModel _viewmodel = StationViewModel();
   List<Station> stations = [];
   List<Station> stationNotFavorite = [];
-   Station stationFavorite = emptyStation();
+  Station stationFavorite = emptyStation();
 
   @override
   void initState() {
@@ -24,19 +27,37 @@ class _StationListViewState extends State<StationListView> {
     _fetchStation();
   }
 
+  void selectStation(BuildContext context, Station station) {
+    Navigator.of(context).pushNamed(StationDetailView.routeName, arguments: {
+      "id": station.id
+    }).then((value) async {
+      final prefs = await SharedPreferences.getInstance();
+      var favoriteId = (prefs.getString('stationFavoriteId') ?? '');
+      setState(() {
+        stationFavorite = stations.firstWhere(
+                (element) => element.id == favoriteId,
+            orElse: () => emptyStation());
+        stationNotFavorite =
+            stations.where((station) => station.id != favoriteId ).toList();
+      });
+    });
+  }
+
   void _fetchStation() async {
     List<Station> fetchedStation = await _viewmodel.fetchStation();
+    var favoriteId = StationFavoriteViewModel.getFavoriteStationId();
     setState(() {
       stations = fetchedStation;
-      stationFavorite = stations.firstWhere((element) => element.isFavorite!, orElse: () => emptyStation());
-      stationNotFavorite = stations.where((station) => !station.isFavorite!).toList();
+      stationFavorite = stations.firstWhere(
+              (element) => element.id == favoriteId,
+          orElse: () => emptyStation());
+      stationNotFavorite =
+          stations.where((station) => !station.isFavorite!).toList();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-
-
     return Material(
       color: const Color.fromRGBO(6, 7, 14, 1),
       child: Column(
@@ -65,13 +86,15 @@ class _StationListViewState extends State<StationListView> {
                   // Logique du bouton
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromRGBO(7, 26, 79, 1)
-                ),
+                    backgroundColor: const Color.fromRGBO(7, 26, 79, 1)),
                 child: const Text('Filtre'),
               ),
             ],
           ),
-          StationFavoriteCard(stationFavorite, 79, 59, 8, 1),
+          InkWell(
+            onTap: () => selectStation(context, stationFavorite),
+            child: StationFavoriteCard(stationFavorite, 79, 59, 8, 1),
+          ),
           Expanded(
             child: GridView.builder(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -81,7 +104,10 @@ class _StationListViewState extends State<StationListView> {
               itemCount: stationNotFavorite.length,
               itemBuilder: (BuildContext context, int index) {
                 final station = stationNotFavorite[index];
-                return StationCard(station, 7, 26, 79, 1);
+                return InkWell(
+                  onTap: () => selectStation(context, station),
+                  child: StationCard(station, 7, 26, 79, 1),
+                );
               },
             ),
           ),

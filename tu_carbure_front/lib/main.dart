@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tu_carbure_front/View/Station_detail_view.dart';
-import 'package:tu_carbure_front/View/Station_list_view.dart';
+import 'package:tu_carbure_front/View/screens/Station_detail_view.dart';
+import 'package:tu_carbure_front/View/screens/Station_list_view.dart';
 
 void main() {
   runApp(MyApp());

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tu_carbure_front/Model/Station.dart';
 import 'package:tu_carbure_front/View/widget/Station_list_carburant_widget.dart';
 import 'package:tu_carbure_front/View/widget/Station_map_widget.dart';
@@ -12,6 +13,7 @@ class StationDetailView extends StatefulWidget {
 }
 
 class _StationDetailViewState extends State<StationDetailView> {
+  bool isFavorite = false;
   final StationViewModel _viewModel = StationViewModel();
   String? stationId;
   Station station = emptyStation();
@@ -20,6 +22,26 @@ class _StationDetailViewState extends State<StationDetailView> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     _fetchStation();
+    _setFavorite();
+  }
+
+  _setFavorite() async{
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      isFavorite = (prefs.getString('stationFavoriteId') ?? '') == stationId ? true: false;
+    });
+  }
+
+  _toggleFavorite() async{
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      isFavorite = !isFavorite;
+      if(isFavorite){
+        prefs.setString('stationFavoriteId', stationId!);
+      }else{
+        prefs.setString('stationFavoriteId', '');
+      }
+    });
   }
 
   void _fetchStation() async {
@@ -43,11 +65,9 @@ class _StationDetailViewState extends State<StationDetailView> {
             Center(child: Image.asset('assets/tu_carbure_logo.png', width: 150)),
             SizedBox(width: 8),
             ElevatedButton(
-              onPressed: () {
-                // Ajout Favoris button action
-              },
+              onPressed: _toggleFavorite,
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color.fromRGBO(79, 59, 8, 1),
+                backgroundColor: isFavorite? Color.fromRGBO(79, 59, 8, 1):Color.fromRGBO(7, 26, 79, 1),
               ),
               child: Text(
                 'Ajout Favoris',
