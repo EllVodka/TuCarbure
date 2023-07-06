@@ -65,7 +65,7 @@ class StationMap extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8.0),
                   child: FlutterMap(
                     options: MapOptions(
-                      center: LatLng(station.latitude, station.longitude),
+                      center: LatLng(station.coordonnees.latitude, station.coordonnees.longitude),
                       zoom: 17.50,
                     ),
                     children: [
@@ -79,7 +79,7 @@ class StationMap extends StatelessWidget {
                           Marker(
                             width: 50.0,
                             height: 50.0,
-                            point: LatLng(station.latitude, station.longitude),
+                            point: LatLng(station.coordonnees.latitude, station.coordonnees.longitude),
                             builder: (ctx) => Container(
                               child: Icon(
                                 Icons.location_pin,

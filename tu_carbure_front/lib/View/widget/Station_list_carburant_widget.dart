@@ -12,9 +12,9 @@ class StationListCarburant extends StatelessWidget {
       child: Card(
         child: ListView.builder(
           primary: false,
-          itemCount: station.carburant.length,
+          itemCount: station.carburants.length,
           itemBuilder: (context, index) {
-            final carburant = station.carburant[index];
+            final carburant = station.carburants[index];
             return Material(
               color: Color.fromRGBO(6, 7, 14, 1),
               child: Container(

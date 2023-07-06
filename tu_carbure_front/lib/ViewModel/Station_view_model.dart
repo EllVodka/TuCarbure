@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 import 'package:tu_carbure_front/Model/Carburant.dart';
+import 'package:tu_carbure_front/Model/Coordonnes.dart';
 import 'package:tu_carbure_front/Model/Station.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/io_client.dart' as http_io;
@@ -19,7 +20,6 @@ class StationViewModel {
 
     if (response.statusCode == 200) {
       var stations = stationsFromJson(response.body);
-      stations.map((station) => station.isFavorite = false);
       return stations;
     } else {
       throw Exception('Failed to fetch fetchStation from API');
@@ -36,7 +36,6 @@ class StationViewModel {
 
     if (response.statusCode == 200) {
       var station = stationFromJson(response.body);
-      station.isFavorite = false;
       return station;
     } else {
       throw Exception('Failed to fetch GetStationById from API');
@@ -151,14 +150,12 @@ Station generateFakeStation(String id,
   return Station(
     id: id,
     marque: marque,
-    isFavorite: isFavorite,
     voie: voie,
     numVoie: numVoie,
     ville: ville,
     codePostal: codePostal,
-    latitude: latitude,
-    longitude: longitude,
-    carburant: carburants,
+    coordonnees: Coordonnees(latitude: latitude,longitude: longitude),
+    carburants: carburants,
   );
 }
 

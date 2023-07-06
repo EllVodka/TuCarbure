@@ -47,7 +47,7 @@ class StationCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  '${station.carburant.first.dateMaj.difference(DateTime.now()).inDays} j',
+                  '${station.carburants.first.dateMaj.difference(DateTime.now()).inDays} j',
                   style: const TextStyle(
                     fontSize: 12.0,
                     color: Color.fromRGBO(149, 149, 149, 1),
@@ -73,7 +73,7 @@ class StationCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  '${station.carburant.first.prix.toStringAsFixed(2)} €',
+                  '${station.carburants.first.prix.toStringAsFixed(2)} €',
                   style: const TextStyle(
                     fontSize: 16.0,
                     color: Color.fromRGBO(244, 244, 246, 1),
