@@ -31,7 +31,7 @@ public partial class Station
     public Coordonnee? Coordonnees {get; set;}
 
     [BsonElement("carburants")]
-    public List<Carburant>? Carburants {get; set;}
+    public List<Carburant> Carburants {get; set;} = null!;
 
 
 }

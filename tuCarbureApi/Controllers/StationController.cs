@@ -21,11 +21,11 @@ public class StationController : ControllerBase
        return await _mongoDBService.GetAsync();
     }
 
-    [HttpGet]
-    [Route("/{latitude}/{longitude}/{distanceMax}")]
-    public async Task<ActionResult<List<Station>>> Get(double latitude, double longitude, int distanceMax)
+    [HttpPost]
+    [Route("/getFilteredStation")]
+    public async Task<ActionResult<List<Station>>> Get([FromBody] StationRequest stationRequest)
     {
-        IEnumerable<Station> NearestStations = await _mongoDBService.GetStationByDistance(latitude, longitude, distanceMax);
+        IEnumerable<Station> NearestStations = await _mongoDBService.GetStationByDistance(stationRequest);
 
         if (NearestStations.Any())
         {
