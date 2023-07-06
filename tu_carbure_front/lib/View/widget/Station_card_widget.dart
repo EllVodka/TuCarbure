@@ -8,21 +8,15 @@ class StationCard extends StatelessWidget {
   final int backgroundColorG;
   final int backgroundColorB;
   final double backgroundColorO;
+  // final function(BuildContext context) selectStation;
 
 
   StationCard(this.station, this.backgroundColorR, this.backgroundColorG,
       this.backgroundColorB, this.backgroundColorO);
 
-  void selectStation(BuildContext context) {
-    Navigator.of(context).pushNamed(StationDetailView.routeName,
-        arguments: {"id": station.id});
-  }
-
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () => selectStation(context),
-      child: Container(
+    return  Container(
         height: 40,
         margin: const EdgeInsets.symmetric(horizontal: 7.0, vertical: 7.0),
         padding: const EdgeInsets.all(10.0),
@@ -89,7 +83,6 @@ class StationCard extends StatelessWidget {
             )
           ],
         ),
-      ),
-    );
+      );
   }
 }
