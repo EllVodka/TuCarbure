@@ -1,4 +1,7 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class StationPopupFilter extends StatefulWidget {
   const StationPopupFilter({Key? key}) : super(key: key);
@@ -15,18 +18,41 @@ class _StationPopupFilterState extends State<StationPopupFilter> {
     {'label': 'E5(SP95)', 'value': 'Sans Plomb 95'},
     {'label': 'E5(SP98)', 'value': 'Sans Plomb 98'},
     {'label': 'E10', 'value': 'Sans Plomb 95'},
-    {'label': 'E85', 'value': ' Superéthanol E85'},
+    {'label': 'E85', 'value': ' Superéthanol'},
     {'label': 'B7', 'value': 'Gazole'},
     {'label': 'GPL', 'value': 'GPL'},
   ];
 
-  final List<Map<String, String>> distance = [
+  final List<Map<String, String>> distanceTypes = [
     {'label': '1km', 'value': '1000'},
     {'label': '5km', 'value': '5000'},
     {'label': '10km', 'value': '10000'},
     {'label': '20km', 'value': '20000'},
     {'label': '50km', 'value': '50000'},
   ];
+
+  _setFilter() async{
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString('fuel', fuelTypes[0]["value"]!);
+    prefs.setInt('distance', int.parse(distanceTypes[0]["value"]!));
+  }
+
+  _setFilterFuel(String fuel,String codeEuro) async{
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString('fuel', fuel);
+    prefs.setString('codeEuro', codeEuro);
+  }
+
+  _setFilterDisantce(int distance) async{
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setInt('distance', distance);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _setFilter();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,6 +77,7 @@ class _StationPopupFilterState extends State<StationPopupFilter> {
                   padding: const EdgeInsets.symmetric(horizontal: 8),
                   child: ElevatedButton(
                     onPressed: () {
+                      _setFilterFuel(fuelType["value"]!,fuelType["label"]!);
                       setState(() {
                         selectedIndexFuel = index;
                       });
@@ -92,13 +119,14 @@ class _StationPopupFilterState extends State<StationPopupFilter> {
             height: 40,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: distance.length,
+              itemCount: distanceTypes.length,
               itemBuilder: (context, index) {
-                final fuelType = distance[index];
+                final distanceType = distanceTypes[index];
                 return Padding(
                   padding: EdgeInsets.symmetric(horizontal: 8),
                   child: ElevatedButton(
                     onPressed: () {
+                      _setFilterDisantce(int.parse(distanceType["value"]!));
                       setState(() {
                         selectedIndexDistance = index;
                       });
@@ -118,7 +146,7 @@ class _StationPopupFilterState extends State<StationPopupFilter> {
                       ),
                     ),
                     child: Text(
-                      fuelType['label']!,
+                      distanceType['label']!,
                       style: const TextStyle(
                         color: Color(0xFFF4F4F6),
                       ),

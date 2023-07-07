@@ -24,11 +24,12 @@ class _StationListViewState extends State<StationListView> {
   List<Station> stationNotFavorite = [];
   Station stationFavorite = emptyStation();
   late Position currentPosition;
+  late String currentFuel;
 
   @override
   void initState() {
     super.initState();
-    _fetchStation();
+    _fetchStation(20000, "Gazole","B7");
   }
 
   void selectStation(BuildContext context, Station station) {
@@ -47,14 +48,17 @@ class _StationListViewState extends State<StationListView> {
     });
   }
 
-  void _fetchStation() async {
+  void _fetchStation(int distance, String fuel,String codeEuro) async {
     final prefs = await SharedPreferences.getInstance();
     var currentPostionTemp = await _viewmodel.getCurrentPosition();
     List<Station> fetchedStation = await _viewmodel.fetchStationFiltred(
-        currentPostionTemp.latitude, currentPostionTemp.longitude, 20000, "Gazole");
+        currentPostionTemp.latitude,
+        currentPostionTemp.longitude,
+        distance,
+        fuel);
     var favoriteId = (prefs.getString('stationFavoriteId') ?? '');
     setState(() {
-
+      currentFuel = codeEuro;
       stations = fetchedStation;
       stationFavorite = stations.firstWhere(
         (element) => element.id == favoriteId,
@@ -63,6 +67,7 @@ class _StationListViewState extends State<StationListView> {
       stationNotFavorite =
           stations.where((station) => station.id != favoriteId).toList();
       currentPosition = currentPostionTemp;
+
     });
   }
 
@@ -70,6 +75,14 @@ class _StationListViewState extends State<StationListView> {
     setState(() {
       isModalVisible = !isModalVisible;
     });
+  }
+
+  void _fetchWithFilter() async {
+    final prefs = await SharedPreferences.getInstance();
+    var fuel = (prefs.getString('fuel') ?? '');
+    var codeEuro = (prefs.getString('codeEuro') ?? '');
+    var distance = (prefs.getInt('distance') ?? 0);
+    _fetchStation(distance, fuel,codeEuro);
   }
 
   @override
@@ -92,9 +105,9 @@ class _StationListViewState extends State<StationListView> {
                 children: [
                   Container(
                     margin: const EdgeInsets.only(top: 10.0),
-                    child: const Text(
-                      ' B7',
-                      style: TextStyle(
+                    child: Text(
+                      currentFuel,
+                      style: const TextStyle(
                         fontSize: 16.0,
                         color: Color.fromRGBO(244, 244, 246, 1),
                       ),
@@ -113,7 +126,7 @@ class _StationListViewState extends State<StationListView> {
                 ],
               ),
               if (stations.isEmpty)
-                Center(
+                const Center(
                   heightFactor: 5,
                   child: Text(
                     'Aucune station accessible',
@@ -126,7 +139,8 @@ class _StationListViewState extends State<StationListView> {
               else
                 InkWell(
                   onTap: () => selectStation(context, stationFavorite),
-                  child: StationFavoriteCard(stationFavorite, 79, 59, 8, 1,currentPosition),
+                  child: StationFavoriteCard(
+                      stationFavorite, 79, 59, 8, 1, currentPosition),
                 ),
               Expanded(
                 child: GridView.builder(
@@ -139,7 +153,8 @@ class _StationListViewState extends State<StationListView> {
                     final station = stationNotFavorite[index];
                     return InkWell(
                       onTap: () => selectStation(context, station),
-                      child: StationCard(station, 7, 26, 79, 1,currentPosition),
+                      child:
+                          StationCard(station, 7, 26, 79, 1, currentPosition),
                     );
                   },
                 ),
@@ -150,6 +165,7 @@ class _StationListViewState extends State<StationListView> {
             GestureDetector(
               onTap: () {
                 _toggleModal();
+                _fetchWithFilter();
               },
               child: Container(
                 color: Colors.black.withOpacity(0.3),
@@ -161,8 +177,8 @@ class _StationListViewState extends State<StationListView> {
               left: 0,
               right: 0,
               child: Container(
-                color: Color.fromRGBO(6, 7, 14, 1),
-                child: StationPopupFilter(),
+                color: const Color.fromRGBO(6, 7, 14, 1),
+                child: const StationPopupFilter(),
               ),
             ),
         ],
