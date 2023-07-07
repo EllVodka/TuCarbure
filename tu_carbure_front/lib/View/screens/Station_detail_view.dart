@@ -85,7 +85,7 @@ class _StationDetailViewState extends State<StationDetailView> {
       body: Column(
         children: [
           StationMap(station),
-          Expanded(
+          Flexible(
             flex: 2,
             child: RefreshIndicator(
               onRefresh: _fetchStation,

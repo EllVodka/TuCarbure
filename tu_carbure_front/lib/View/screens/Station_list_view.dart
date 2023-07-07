@@ -152,7 +152,7 @@ class _StationListViewState extends State<StationListView> {
                   child: StationFavoriteCard(
                       stationFavorite, 79, 59, 8, 1, currentPosition),
                 ),
-              Expanded(
+              Flexible(
                 child: GridView.builder(
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
@@ -164,7 +164,7 @@ class _StationListViewState extends State<StationListView> {
                     return InkWell(
                       onTap: () => selectStation(context, station),
                       child:
-                          StationCard(station, 7, 26, 79, 1, currentPosition),
+                          StationCard(station, 7, 26, 79, 1, currentPosition,currentFuel),
                     );
                   },
                 ),

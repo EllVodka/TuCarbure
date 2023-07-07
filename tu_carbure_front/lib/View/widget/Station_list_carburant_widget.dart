@@ -43,7 +43,7 @@ class StationListCarburant extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
+    return Flexible(
       flex: 2,
       child: Card(
         child: ListView.builder(

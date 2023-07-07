@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:tu_carbure_front/Model/Carburant.dart';
 import 'package:tu_carbure_front/Model/Station.dart';
 
 class StationCard extends StatelessWidget {
@@ -9,12 +10,19 @@ class StationCard extends StatelessWidget {
   final int backgroundColorB;
   final double backgroundColorO;
   final Position currentPosition;
+  final String filter;
+
+
 
   StationCard(this.station, this.backgroundColorR, this.backgroundColorG,
-      this.backgroundColorB, this.backgroundColorO, this.currentPosition);
+      this.backgroundColorB, this.backgroundColorO, this.currentPosition,this.filter);
 
   @override
   Widget build(BuildContext context) {
+    final carburant = station.carburants.firstWhere(
+          (carburant) => carburant.nomEuropeen == filter,
+      orElse: () => Carburant(nom: '', nomEuropeen: '', prix: 0, dateMaj: DateTime.now()),
+    );
     return Container(
       height: 40,
       margin: const EdgeInsets.symmetric(horizontal: 7.0, vertical: 7.0),
@@ -46,7 +54,7 @@ class StationCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
-                '${DateTime.now().difference(station.carburants.first.dateMaj).inDays} j',
+                '${DateTime.now().difference(carburant.dateMaj).inDays} j',
                 style: const TextStyle(
                   fontSize: 12.0,
                   color: Color.fromRGBO(149, 149, 149, 1),
@@ -72,7 +80,7 @@ class StationCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
-                '${station.carburants.first.prix.toStringAsFixed(2)} €',
+                '${carburant.prix.toStringAsFixed(2)} €',
                 style: const TextStyle(
                   fontSize: 16.0,
                   color: Color.fromRGBO(244, 244, 246, 1),
