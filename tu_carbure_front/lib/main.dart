@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:tu_carbure_front/View/screens/Station_detail_view.dart';
 import 'package:tu_carbure_front/View/screens/Station_list_view.dart';
 
 void main() {
+  HttpOverrides.global = MyHttpOverrides();
   runApp(MyApp());
 }
 
@@ -35,5 +38,13 @@ class MyApp extends StatelessWidget {
           StationDetailView.routeName: (context) => StationDetailView(),
       },
     );
+  }
+}
+
+class MyHttpOverrides extends HttpOverrides{
+  @override
+  HttpClient createHttpClient(SecurityContext? context){
+    return super.createHttpClient(context)
+      ..badCertificateCallback = (X509Certificate cert, String host, int port)=> true;
   }
 }
