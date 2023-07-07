@@ -10,7 +10,7 @@ namespace tuCarbureApi.EntityLayer
         [BsonElement("nomCarburant")]
         public string NomCarburant { get; set;}
 
-        [BsonElement("prix")]
+        [BsonElement("prixCarburant")]
         public decimal PrixCarburant { get; set;}
 
         [BsonElement("dateMaj")]
