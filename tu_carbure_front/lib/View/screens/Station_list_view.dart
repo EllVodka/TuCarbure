@@ -30,30 +30,35 @@ class _StationListViewState extends State<StationListView> {
   }
 
   void selectStation(BuildContext context, Station station) {
-    Navigator.of(context).pushNamed(StationDetailView.routeName, arguments: {"id": station.id}).then((value) async {
+    Navigator.of(context).pushNamed(StationDetailView.routeName,
+        arguments: {"id": station.id}).then((value) async {
       final prefs = await SharedPreferences.getInstance();
       var favoriteId = (prefs.getString('stationFavoriteId') ?? '');
       setState(() {
         stationFavorite = stations.firstWhere(
-              (element) => element.id == favoriteId,
+          (element) => element.id == favoriteId,
           orElse: () => emptyStation(),
         );
-        stationNotFavorite = stations.where((station) => station.id != favoriteId).toList();
+        stationNotFavorite =
+            stations.where((station) => station.id != favoriteId).toList();
       });
     });
   }
 
   void _fetchStation() async {
     final prefs = await SharedPreferences.getInstance();
-    List<Station> fetchedStation = await _viewmodel.fetchStation();
+    var currentPostion = await _viewmodel.getCurrentPosition();
+    List<Station> fetchedStation = await _viewmodel.fetchStationFiltred(
+        currentPostion.latitude, currentPostion.longitude, 20000, "Gazole");
     var favoriteId = (prefs.getString('stationFavoriteId') ?? '');
     setState(() {
       stations = fetchedStation;
       stationFavorite = stations.firstWhere(
-            (element) => element.id == favoriteId,
+        (element) => element.id == favoriteId,
         orElse: () => emptyStation(),
       );
-      stationNotFavorite = stations.where((station) => station.id != favoriteId).toList();
+      stationNotFavorite =
+          stations.where((station) => station.id != favoriteId).toList();
     });
   }
 
@@ -93,7 +98,7 @@ class _StationListViewState extends State<StationListView> {
                   ),
                   const SizedBox(width: 50),
                   ElevatedButton(
-                    onPressed:() {
+                    onPressed: () {
                       _toggleModal();
                     },
                     style: ElevatedButton.styleFrom(
@@ -103,10 +108,22 @@ class _StationListViewState extends State<StationListView> {
                   ),
                 ],
               ),
-              InkWell(
-                onTap: () => selectStation(context, stationFavorite),
-                child: StationFavoriteCard(stationFavorite, 79, 59, 8, 1),
-              ),
+              if (stations.isEmpty)
+                Center(
+                  heightFactor: 5,
+                  child: Text(
+                    'Aucune station accessible',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                    ),
+                  ),
+                )
+              else
+                InkWell(
+                  onTap: () => selectStation(context, stationFavorite),
+                  child: StationFavoriteCard(stationFavorite, 79, 59, 8, 1),
+                ),
               Expanded(
                 child: GridView.builder(
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
