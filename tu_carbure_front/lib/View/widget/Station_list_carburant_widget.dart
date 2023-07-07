@@ -1,9 +1,45 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:tu_carbure_front/Model/Station.dart';
+import 'package:tu_carbure_front/ViewModel/Station_view_model.dart';
 
 class StationListCarburant extends StatelessWidget {
   final Station station;
-  const StationListCarburant(this.station);
+  final priceController = TextEditingController();
+  final StationViewModel _viewmodel = StationViewModel();
+
+  StationListCarburant(this.station);
+
+  void _updatePrice(String nomCarbu, double newPrice) async {
+    await _viewmodel.updatePrice(station.id, nomCarbu, newPrice);
+  }
+
+  void _showPopup(BuildContext context, String nomCarbu) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Modifier le prix'),
+          content: TextField(
+            controller: priceController,
+            decoration: InputDecoration(
+              labelText: 'Nouveau prix',
+            ),
+          ),
+          actions: <Widget>[
+            ElevatedButton(
+              onPressed: () {
+                _updatePrice(nomCarbu, double.parse(priceController.text));
+                Navigator.of(context).pop();
+              },
+              child: Text('Modifier'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +67,17 @@ class StationListCarburant extends StatelessWidget {
                   subtitle: Text(
                     '${carburant.prix.toStringAsFixed(2)} €',
                     style: TextStyle(color: Color.fromRGBO(244, 244, 246, 1)),
+                  ),
+                  isThreeLine: true,
+                  trailing: ElevatedButton(
+                    onPressed: () {
+                      _showPopup(context, carburant.nom);
+                    },
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Color.fromRGBO(7, 26, 79, 1),
+                        side: BorderSide(color: Colors.transparent)),
+                    child: Icon(Icons.edit,
+                        color: Color.fromRGBO(244, 244, 246, 1)),
                   ),
                 ),
               ),

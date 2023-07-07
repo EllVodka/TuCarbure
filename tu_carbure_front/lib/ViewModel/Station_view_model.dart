@@ -24,22 +24,43 @@ class StationViewModel {
         desiredAccuracy: LocationAccuracy.high);
   }
 
+  Future updatePrice(String id, String nomCarbu, double newPrice) async {
+    final url = Uri.parse('$apiBaseUrl/Station');
+    final response = await http.patch(
+      url,
+      headers: {"content-type": "application/json"},
+      body: jsonEncode(<String, dynamic>{
+        "stationId": id,
+        "nomCarburant": nomCarbu,
+        "prixCarburant": newPrice,
+        "dateMaj": DateTime.now().toString()
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      print("Update Succelful");
+      return;
+    } else {
+      throw Exception('Update failed');
+    }
+  }
+
   Future<List<Station>> fetchStationFiltred(double latitude, double longitude,
       int distanceMax, String nomCarbu) async {
     http.Client client = http_io.IOClient(
       HttpClient()..badCertificateCallback = (cert, host, port) => true,
     );
-  
-    Map<String,dynamic> jsonFilter = {
+
+    Map<String, dynamic> jsonFilter = {
       "latitude": latitude,
       "longitude": longitude,
       "distanceMax": distanceMax,
       "nomCarburant": nomCarbu
     };
-    final response = await client
-        .post(Uri.parse('$apiBaseUrl/getFilteredStation'), headers: {
-      "content-type": "application/json"
-    }, body: jsonEncode(jsonFilter));
+    final response = await client.post(
+        Uri.parse('$apiBaseUrl/getFilteredStation'),
+        headers: {"content-type": "application/json"},
+        body: jsonEncode(jsonFilter));
 
     if (response.statusCode == 200) {
       var stations = stationsFromJson(response.body);

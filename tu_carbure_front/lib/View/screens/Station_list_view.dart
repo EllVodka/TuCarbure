@@ -24,7 +24,7 @@ class _StationListViewState extends State<StationListView> {
   List<Station> stationNotFavorite = [];
   Station stationFavorite = emptyStation();
   late Position currentPosition;
-  late String currentFuel;
+  String currentFuel = "";
 
   @override
   void initState() {
@@ -37,13 +37,23 @@ class _StationListViewState extends State<StationListView> {
         arguments: {"id": station.id}).then((value) async {
       final prefs = await SharedPreferences.getInstance();
       var favoriteId = (prefs.getString('stationFavoriteId') ?? '');
+      var fuel = (prefs.getString('fuel') ?? '');
+      var codeEuro = (prefs.getString('codeEuro') ?? '');
+      var distance = (prefs.getInt('distance') ?? 0);
+      List<Station> fetchedStation = await _viewmodel.fetchStationFiltred(
+          currentPosition.latitude,
+          currentPosition.longitude,
+          distance,
+          fuel);
       setState(() {
+        stations = fetchedStation;
         stationFavorite = stations.firstWhere(
           (element) => element.id == favoriteId,
           orElse: () => emptyStation(),
         );
         stationNotFavorite =
             stations.where((station) => station.id != favoriteId).toList();
+        currentFuel = codeEuro;
       });
     });
   }
