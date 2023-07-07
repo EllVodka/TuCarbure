@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:tu_carbure_front/Model/Station.dart';
 import 'package:tu_carbure_front/View/screens/Station_detail_view.dart';
 
@@ -8,9 +9,15 @@ class StationFavoriteCard extends StatelessWidget {
   final int backgroundColorG;
   final int backgroundColorB;
   final double backgroundColorO;
+  final Position currentPosition;
 
-  const StationFavoriteCard(this.station, this.backgroundColorR,
-      this.backgroundColorG, this.backgroundColorB, this.backgroundColorO);
+  const StationFavoriteCard(
+      this.station,
+      this.backgroundColorR,
+      this.backgroundColorG,
+      this.backgroundColorB,
+      this.backgroundColorO,
+      this.currentPosition);
 
   @override
   Widget build(BuildContext context) {
@@ -43,8 +50,8 @@ class StationFavoriteCard extends StatelessWidget {
                   ),
                   const Icon(Icons.route,
                       color: Color.fromRGBO(244, 244, 246, 1)),
-                  const Text(
-                    '10 km - 20 min',
+                  Text(
+                    '${(Geolocator.distanceBetween(currentPosition.latitude, currentPosition.longitude, station.coordonnees.latitude, station.coordonnees.longitude) / 1000).toStringAsFixed(1)} km - ${(Geolocator.distanceBetween(currentPosition.latitude, currentPosition.longitude, station.coordonnees.latitude, station.coordonnees.longitude) / 1000).round() * 2} min',
                     style: TextStyle(
                       fontSize: 14.0,
                       color: Color.fromRGBO(244, 244, 246, 1),
@@ -56,7 +63,7 @@ class StationFavoriteCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Text(
-                  '${station.carburants.first.dateMaj.difference(DateTime.now()).inDays} j',
+                  '${DateTime.now().difference(station.carburants.first.dateMaj).inDays} j',
                   style: const TextStyle(
                     fontSize: 12.0,
                     color: Color.fromRGBO(149, 149, 149, 1),

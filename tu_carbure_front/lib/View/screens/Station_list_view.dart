@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tu_carbure_front/Model/Carburant.dart';
 import 'package:tu_carbure_front/Model/Station.dart';
@@ -22,6 +23,7 @@ class _StationListViewState extends State<StationListView> {
   List<Station> stations = [];
   List<Station> stationNotFavorite = [];
   Station stationFavorite = emptyStation();
+  late Position currentPosition;
 
   @override
   void initState() {
@@ -47,11 +49,12 @@ class _StationListViewState extends State<StationListView> {
 
   void _fetchStation() async {
     final prefs = await SharedPreferences.getInstance();
-    var currentPostion = await _viewmodel.getCurrentPosition();
+    var currentPostionTemp = await _viewmodel.getCurrentPosition();
     List<Station> fetchedStation = await _viewmodel.fetchStationFiltred(
-        currentPostion.latitude, currentPostion.longitude, 20000, "Gazole");
+        currentPostionTemp.latitude, currentPostionTemp.longitude, 20000, "Gazole");
     var favoriteId = (prefs.getString('stationFavoriteId') ?? '');
     setState(() {
+
       stations = fetchedStation;
       stationFavorite = stations.firstWhere(
         (element) => element.id == favoriteId,
@@ -59,6 +62,7 @@ class _StationListViewState extends State<StationListView> {
       );
       stationNotFavorite =
           stations.where((station) => station.id != favoriteId).toList();
+      currentPosition = currentPostionTemp;
     });
   }
 
@@ -122,7 +126,7 @@ class _StationListViewState extends State<StationListView> {
               else
                 InkWell(
                   onTap: () => selectStation(context, stationFavorite),
-                  child: StationFavoriteCard(stationFavorite, 79, 59, 8, 1),
+                  child: StationFavoriteCard(stationFavorite, 79, 59, 8, 1,currentPosition),
                 ),
               Expanded(
                 child: GridView.builder(
@@ -135,7 +139,7 @@ class _StationListViewState extends State<StationListView> {
                     final station = stationNotFavorite[index];
                     return InkWell(
                       onTap: () => selectStation(context, station),
-                      child: StationCard(station, 7, 26, 79, 1),
+                      child: StationCard(station, 7, 26, 79, 1,currentPosition),
                     );
                   },
                 ),
