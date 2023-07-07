@@ -25,28 +25,30 @@ class _StationDetailViewState extends State<StationDetailView> {
     _setFavorite();
   }
 
-  _setFavorite() async{
+  _setFavorite() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      isFavorite = (prefs.getString('stationFavoriteId') ?? '') == stationId ? true: false;
+      isFavorite = (prefs.getString('stationFavoriteId') ?? '') == stationId
+          ? true
+          : false;
     });
   }
 
-  _toggleFavorite() async{
+  _toggleFavorite() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
       isFavorite = !isFavorite;
-      if(isFavorite){
+      if (isFavorite) {
         prefs.setString('stationFavoriteId', stationId!);
-      }else{
+      } else {
         prefs.setString('stationFavoriteId', '');
       }
     });
   }
 
-  void _fetchStation() async {
+  Future<void> _fetchStation() async {
     final routeArgs =
-    ModalRoute.of(context)!.settings.arguments as Map<String, String>;
+        ModalRoute.of(context)!.settings.arguments as Map<String, String>;
     stationId = routeArgs['id'];
     Station fetchedStation = await _viewModel.getStationById(stationId!);
     setState(() {
@@ -62,12 +64,15 @@ class _StationDetailViewState extends State<StationDetailView> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Center(child: Image.asset('assets/tu_carbure_logo.png', width: 150)),
+            Center(
+                child: Image.asset('assets/tu_carbure_logo.png', width: 150)),
             SizedBox(width: 8),
             ElevatedButton(
               onPressed: _toggleFavorite,
               style: ElevatedButton.styleFrom(
-                backgroundColor: isFavorite? Color.fromRGBO(79, 59, 8, 1):Color.fromRGBO(7, 26, 79, 1),
+                backgroundColor: isFavorite
+                    ? Color.fromRGBO(79, 59, 8, 1)
+                    : Color.fromRGBO(7, 26, 79, 1),
               ),
               child: Text(
                 'Ajout Favoris',
@@ -80,7 +85,13 @@ class _StationDetailViewState extends State<StationDetailView> {
       body: Column(
         children: [
           StationMap(station),
-          StationListCarburant(station),
+          Expanded(
+            flex: 2,
+            child: RefreshIndicator(
+              onRefresh: _fetchStation,
+              child: StationListCarburant(station),
+            ),
+          ),
         ],
       ),
     );
